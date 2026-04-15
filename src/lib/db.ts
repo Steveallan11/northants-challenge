@@ -23,6 +23,11 @@ export function getPool() {
     global.__northantsPool = new Pool({
       connectionString,
       ssl: false,
+      connectionTimeoutMillis: 3000,
+      query_timeout: 5000,
+      statement_timeout: 5000,
+      idleTimeoutMillis: 10000,
+      max: 5,
     });
   }
 
