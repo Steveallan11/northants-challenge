@@ -106,7 +106,7 @@ export function QuizRunner({ quiz, attemptId }: { quiz: QuizWithQuestions; attem
     <div className="mx-auto max-w-3xl space-y-6">
       <div className="space-y-4">
         <div className="flex items-center justify-between gap-4">
-          <Badge>{statusLabel}</Badge>
+          <Badge className="bg-orange-500 text-white">{statusLabel}</Badge>
           <div className="flex items-center gap-2 text-sm text-slate-300">
             <Clock3 className="h-4 w-4 text-orange-300" />
             {secondsRemaining}s left
@@ -131,10 +131,11 @@ export function QuizRunner({ quiz, attemptId }: { quiz: QuizWithQuestions; attem
           exit={{ opacity: 0, y: -18 }}
           transition={{ duration: 0.25 }}
         >
-          <Card>
+          <Card className="border-orange-500/15 bg-[linear-gradient(180deg,rgba(18,18,18,0.98),rgba(10,10,10,0.98))]">
             <CardContent className="space-y-6 p-6 sm:p-8">
               <div className="space-y-4">
-                <h1 className="text-2xl font-semibold leading-tight text-balance text-white sm:text-3xl">{question.prompt}</h1>
+                <div className="orange-tab">One answer only</div>
+                <h1 className="headline-brand text-2xl font-semibold leading-tight text-balance text-white sm:text-3xl">{question.prompt}</h1>
                 {question.extra_text ? <p className="text-base leading-relaxed text-slate-300">{question.extra_text}</p> : null}
                 {question.image_url ? (
                   <div className="overflow-hidden rounded-3xl border border-white/10 bg-black/20">
@@ -152,7 +153,7 @@ export function QuizRunner({ quiz, attemptId }: { quiz: QuizWithQuestions; attem
                     variant="outline"
                     size="lg"
                     disabled={isLocked || isPending}
-                    className="min-h-16 justify-start whitespace-normal rounded-[24px] border-white/10 bg-white/[0.03] px-5 text-left text-base hover:scale-[1.01] hover:border-orange-400 hover:bg-orange-500/10"
+                    className="min-h-16 justify-start whitespace-normal rounded-[24px] border-white/10 bg-white/[0.03] px-5 text-left text-base hover:scale-[1.01] hover:border-orange-400 hover:bg-orange-500/10 active:scale-[0.99]"
                     onClick={() => handleAnswer(index, remainingMs)}
                   >
                     <span className="mr-4 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/8 text-sm font-semibold text-orange-200">

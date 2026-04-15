@@ -1,10 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AdminShell } from "@/components/admin/admin-shell";
-import { getDashboardData, requireAdmin } from "@/lib/data";
+import { BackendStatusBanner } from "@/components/ui/backend-status-banner";
+import { getBackendStatus, getDashboardData, requireAdmin } from "@/lib/data";
 
 export default async function AdminDashboardPage() {
   await requireAdmin();
-  const dashboard = await getDashboardData();
+  const [dashboard, backendStatus] = await Promise.all([getDashboardData(), getBackendStatus()]);
 
   const stats = [
     { label: "Active quiz", value: dashboard.activeQuiz?.title ?? "None" },
@@ -23,6 +24,8 @@ export default async function AdminDashboardPage() {
         <h1 className="text-4xl font-semibold text-white">Dashboard</h1>
         <p className="mt-2 text-slate-300">Monitor weekly performance, leads, and quiz health in one place.</p>
       </div>
+
+      <BackendStatusBanner status={backendStatus} variant="admin" />
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {stats.map((stat) => (

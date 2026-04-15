@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --font-sans: "Space Grotesk", "Avenir Next", "Segoe UI", sans-serif;
-  --font-display: "Sora", "Avenir Next", "Segoe UI", sans-serif;
-  --background: #0b0d11;
+  --font-sans: "Montserrat", "Avenir Next", "Segoe UI", sans-serif;
+  --font-display: "League Spartan", "Arial Black", "Avenir Next Condensed", sans-serif;
+  --background: #111111;
   --foreground: #f7f8fa;
-  --muted: #9ca3af;
+  --muted: #7a7a7a;
   --muted-foreground: #cbd5e1;
   --card: rgba(16, 18, 24, 0.88);
   --card-foreground: #f9fafb;
@@ -13,15 +13,15 @@
   --popover-foreground: #f9fafb;
   --border: rgba(255, 255, 255, 0.12);
   --input: rgba(255, 255, 255, 0.08);
-  --primary: #ff7a18;
+  --primary: #f57c00;
   --primary-foreground: #fff8f1;
-  --secondary: rgba(255, 255, 255, 0.08);
+  --secondary: #f4f4f2;
   --secondary-foreground: #f9fafb;
-  --accent: #ff9f43;
+  --accent: #efe7dd;
   --accent-foreground: #111827;
   --destructive: #ef4444;
-  --ring: rgba(255, 122, 24, 0.45);
-  --chart-1: #ff7a18;
+  --ring: rgba(245, 124, 0, 0.45);
+  --chart-1: #f57c00;
   --chart-2: #f59e0b;
   --chart-3: #fb923c;
   --chart-4: #f97316;
@@ -40,9 +40,9 @@ html {
 body {
   min-height: 100vh;
   background:
-    radial-gradient(circle at top, rgba(255, 122, 24, 0.18), transparent 30%),
-    radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.08), transparent 20%),
-    linear-gradient(180deg, #0f1116 0%, #090b0f 100%);
+    linear-gradient(135deg, rgba(245, 124, 0, 0.12), transparent 28%),
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.06), transparent 20%),
+    linear-gradient(180deg, #111111 0%, #0c0c0c 55%, #121212 100%);
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
 }
@@ -72,7 +72,9 @@ a:focus-visible {
 
 .glass-panel {
   backdrop-filter: blur(18px);
-  background: linear-gradient(180deg, rgba(22, 25, 32, 0.92), rgba(12, 14, 18, 0.92));
+  background:
+    linear-gradient(180deg, rgba(28, 28, 28, 0.94), rgba(16, 16, 16, 0.96)),
+    radial-gradient(circle at top right, rgba(245, 124, 0, 0.1), transparent 25%);
 }
 
 .page-shell {
@@ -81,4 +83,29 @@ a:focus-visible {
 
 .text-balance {
   text-wrap: balance;
+}
+
+.headline-brand {
+  font-family: var(--font-display), sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.orange-tab {
+  display: inline-flex;
+  width: fit-content;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 124, 0, 0.3);
+  background: rgba(245, 124, 0, 0.14);
+  padding: 0.35rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #ffd7b0;
+}
+
+.brand-footer-strip {
+  border-top: 1px solid rgba(245, 124, 0, 0.18);
+  background: linear-gradient(90deg, rgba(245, 124, 0, 0.15), rgba(255, 255, 255, 0.04));
 }

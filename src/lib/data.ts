@@ -30,6 +30,13 @@ type DashboardData = {
   topReferrers: Array<{ first_name: string; score: number; share_code: string | null }>;
 };
 
+export type BackendStatus = {
+  mode: "live" | "fallback";
+  databaseConfigured: boolean;
+  firebaseAdminConfigured: boolean;
+  databaseReachable: boolean;
+};
+
 function createFallbackLeaderboard(): LeaderboardEntry[] {
   return [
     {
@@ -877,6 +884,37 @@ export async function getExportRows(type: "players" | "newsletter" | "attempts" 
     return (await getAttempts()) as Array<Record<string, unknown>>;
   }
   return (await getLeaderboard("weekly")) as Array<Record<string, unknown>>;
+}
+
+export async function getBackendStatus(): Promise<BackendStatus> {
+  const databaseConfigured = hasDatabase();
+  const firebaseAdminConfigured = hasFirebaseAdmin();
+
+  if (!databaseConfigured) {
+    return {
+      mode: "fallback",
+      databaseConfigured: false,
+      firebaseAdminConfigured,
+      databaseReachable: false,
+    };
+  }
+
+  try {
+    await dbQuery("select 1");
+    return {
+      mode: "live",
+      databaseConfigured: true,
+      firebaseAdminConfigured,
+      databaseReachable: true,
+    };
+  } catch {
+    return {
+      mode: "fallback",
+      databaseConfigured: true,
+      firebaseAdminConfigured,
+      databaseReachable: false,
+    };
+  }
 }
 
 export async function createAdminSession(idToken: string) {
