@@ -10,6 +10,7 @@ Northants Challenge is a production-style weekly quiz app built with Next.js, Ty
 - shadcn-style component primitives
 - Framer Motion
 - Cloud SQL Postgres for quiz/player data
+- Cloud SQL Node connector for Vercel-friendly database access without static IPs
 - Firebase Auth for admin login
 - Firebase client/admin SDKs for session handling
 - Zod + React Hook Form
@@ -43,10 +44,17 @@ If database or Firebase variables are missing, or Cloud SQL is temporarily unrea
 1. Create a Google Cloud project and link Firebase.
 2. Create a Cloud SQL Postgres instance and database.
 3. Enable Firebase Auth email/password sign-in.
-4. Add these values to `.env.local`:
-   - `DATABASE_URL`
+4. Give the service account used by the app the `Cloud SQL Client` IAM role.
+5. Add these values to `.env.local`:
+   - `INSTANCE_CONNECTION_NAME`
+   - `DB_USER`
+   - `DB_PASS`
+   - `DB_NAME`
    - `ADMIN_EMAIL`
    - `GCP_PROJECT_ID`
+   - `GOOGLE_PROJECT_ID` or reuse `FIREBASE_PROJECT_ID`
+   - `GOOGLE_CLIENT_EMAIL` or reuse `FIREBASE_CLIENT_EMAIL`
+   - `GOOGLE_PRIVATE_KEY` or reuse `FIREBASE_PRIVATE_KEY`
    - `NEXT_PUBLIC_FIREBASE_API_KEY`
    - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
    - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
@@ -57,10 +65,10 @@ If database or Firebase variables are missing, or Cloud SQL is temporarily unrea
    - `FIREBASE_PROJECT_ID`
    - `FIREBASE_CLIENT_EMAIL`
    - `FIREBASE_PRIVATE_KEY`
-5. Run the SQL migrations in order:
+6. Run the SQL migrations in order:
    - `supabase/migrations/001_init.sql`
    - `supabase/migrations/002_seed.sql`
-6. In Firebase Storage, create a bucket for quiz images if you want image rounds.
+7. In Firebase Storage, create a bucket for quiz images if you want image rounds.
 
 ## How to create the first admin
 
@@ -97,14 +105,21 @@ The test suite covers:
 1. Push the repo to GitHub.
 2. Import it into Vercel.
 3. Add the same environment variables from `.env.local` into the Vercel project settings.
-4. Run the SQL migrations in your Cloud SQL Postgres database before going live.
-5. Set `NEXT_PUBLIC_SITE_URL` to the production domain, or let preview deployments fall back to `VERCEL_URL`.
-6. Make sure your Cloud SQL instance accepts runtime traffic from the deployment environment. If Cloud SQL is exposed over public IP, the instance must allow connections from the network your Vercel deployment is using.
+4. Add the Cloud SQL connector env vars to Vercel:
+   - `INSTANCE_CONNECTION_NAME`
+   - `DB_USER`
+   - `DB_PASS`
+   - `DB_NAME`
+   - `GOOGLE_PROJECT_ID` or `FIREBASE_PROJECT_ID`
+   - `GOOGLE_CLIENT_EMAIL` or `FIREBASE_CLIENT_EMAIL`
+   - `GOOGLE_PRIVATE_KEY` or `FIREBASE_PRIVATE_KEY`
+5. Run the SQL migrations in your Cloud SQL Postgres database before going live.
+6. Set `NEXT_PUBLIC_SITE_URL` to the production domain, or let preview deployments fall back to `VERCEL_URL`.
 
 ### Vercel testing notes
 
 - Preview deployments can fully exercise the Firebase admin login and server routes once the required environment variables are configured in Vercel.
-- The app already falls back gracefully if the database is unreachable during build or preview generation, but the full quiz persistence flow still needs live database connectivity at runtime.
+- The app now supports Cloud SQL connector-based access, which is the recommended path for Vercel if you do not want to buy static egress IPs.
 - Keep `.env.local` out of source control. This repo now ignores it by default.
 - Use `/api/health` on a Vercel preview deployment to check whether Firebase admin config is loaded and whether Cloud SQL is actually reachable at runtime.
 
