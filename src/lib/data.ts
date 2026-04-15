@@ -11,6 +11,8 @@ import { seededQuiz } from "@/lib/seed";
 import type { Attempt, AttemptWithPlayer, LeaderboardEntry, Player, Question, Quiz, QuizWithQuestions } from "@/lib/types";
 
 const ADMIN_SESSION_COOKIE = "northants_admin_session";
+const FALLBACK_ATTEMPT_ID = "11111111-1111-4111-8111-111111111111";
+const FALLBACK_PLAYER_ID = "22222222-2222-4222-8222-222222222222";
 
 type DashboardData = {
   activeQuiz: Quiz | null;
@@ -31,8 +33,8 @@ type DashboardData = {
 function createFallbackLeaderboard(): LeaderboardEntry[] {
   return [
     {
-      attempt_id: "demo-attempt-1",
-      player_id: "demo-player-1",
+      attempt_id: "11111111-1111-4111-8111-111111111101",
+      player_id: "22222222-2222-4222-8222-222222222201",
       first_name: "Ava",
       town: "Northampton",
       score: 842,
@@ -42,8 +44,8 @@ function createFallbackLeaderboard(): LeaderboardEntry[] {
       share_code: "ava842",
     },
     {
-      attempt_id: "demo-attempt-2",
-      player_id: "demo-player-2",
+      attempt_id: "11111111-1111-4111-8111-111111111102",
+      player_id: "22222222-2222-4222-8222-222222222202",
       first_name: "Luca",
       town: "Kettering",
       score: 795,
@@ -53,8 +55,8 @@ function createFallbackLeaderboard(): LeaderboardEntry[] {
       share_code: "luca795",
     },
     {
-      attempt_id: "demo-attempt-3",
-      player_id: "demo-player-3",
+      attempt_id: "11111111-1111-4111-8111-111111111103",
+      player_id: "22222222-2222-4222-8222-222222222203",
       first_name: "Mia",
       town: "Wellingborough",
       score: 732,
@@ -324,10 +326,10 @@ export async function registerPlayerForActiveQuiz(input: {
 
   if (!hasDatabase()) {
     return {
-      attemptId: "demo-attempt",
+      attemptId: FALLBACK_ATTEMPT_ID,
       quizSlug: quiz.slug,
       player: {
-        id: "demo-player",
+        id: FALLBACK_PLAYER_ID,
         first_name: input.first_name,
         email: input.email,
         town: input.town || null,
@@ -415,10 +417,10 @@ export async function registerPlayerForActiveQuiz(input: {
     });
   } catch {
     return {
-      attemptId: "demo-attempt",
+      attemptId: FALLBACK_ATTEMPT_ID,
       quizSlug: quiz.slug,
       player: {
-        id: "demo-player",
+        id: FALLBACK_PLAYER_ID,
         first_name: input.first_name,
         email: input.email,
         town: input.town || null,
