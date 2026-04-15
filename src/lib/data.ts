@@ -68,6 +68,39 @@ function createFallbackLeaderboard(): LeaderboardEntry[] {
   ];
 }
 
+function createFallbackResultData(attemptId: string) {
+  const leaderboard = createFallbackLeaderboard();
+  const demo = leaderboard[0];
+  return {
+    attempt: {
+      id: attemptId,
+      quiz_id: seededQuiz.id,
+      player_id: FALLBACK_PLAYER_ID,
+      score: demo.score,
+      correct_count: demo.correct_count,
+      average_response_ms: demo.average_response_ms,
+      completed_at: demo.completed_at,
+      is_scored: true,
+      share_code: demo.share_code,
+      referred_by_attempt_id: null,
+      created_at: demo.completed_at,
+    } satisfies Attempt,
+    player: {
+      id: FALLBACK_PLAYER_ID,
+      first_name: demo.first_name,
+      email: "demo@example.com",
+      town: demo.town,
+      newsletter_opt_in: true,
+      consent_version: CONSENT_VERSION,
+      created_at: demo.completed_at,
+    } satisfies Player,
+    rank: 1,
+    badge: getBadgeForScore(demo.score),
+    leaderboard,
+    quiz: seededQuiz,
+  };
+}
+
 function normalizeQuestion(row: Question & { options: unknown }) {
   return {
     ...row,
@@ -213,37 +246,12 @@ export async function getResultData(attemptId: string): Promise<{
   leaderboard: LeaderboardEntry[];
   quiz: Quiz;
 } | null> {
+  if (attemptId === FALLBACK_ATTEMPT_ID) {
+    return createFallbackResultData(attemptId);
+  }
+
   if (!hasDatabase()) {
-    const leaderboard = createFallbackLeaderboard();
-    const demo = leaderboard[0];
-    return {
-      attempt: {
-        id: demo.attempt_id,
-        quiz_id: seededQuiz.id,
-        player_id: demo.player_id,
-        score: demo.score,
-        correct_count: demo.correct_count,
-        average_response_ms: demo.average_response_ms,
-        completed_at: demo.completed_at,
-        is_scored: true,
-        share_code: demo.share_code,
-        referred_by_attempt_id: null,
-        created_at: demo.completed_at,
-      } satisfies Attempt,
-      player: {
-        id: demo.player_id,
-        first_name: demo.first_name,
-        email: "demo@example.com",
-        town: demo.town,
-        newsletter_opt_in: true,
-        consent_version: CONSENT_VERSION,
-        created_at: demo.completed_at,
-      } satisfies Player,
-      rank: 1,
-      badge: getBadgeForScore(demo.score),
-      leaderboard,
-      quiz: seededQuiz,
-    };
+    return createFallbackResultData(FALLBACK_ATTEMPT_ID);
   }
 
   try {
@@ -311,6 +319,9 @@ export async function getResultData(attemptId: string): Promise<{
       } satisfies Quiz,
     };
   } catch {
+    if (attemptId === FALLBACK_ATTEMPT_ID) {
+      return createFallbackResultData(attemptId);
+    }
     return null;
   }
 }
